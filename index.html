@@ -46,7 +46,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       min-height: 100vh;
+      gap: 20px;
     }
 
     .container {
@@ -62,7 +64,6 @@
       text-align: center;
       position: relative;
       overflow: hidden;
-      margin-bottom: 20px;
     }
 
     h2 {
@@ -235,9 +236,9 @@
     }
 
     .tracker-container {
-      margin-top: 28px;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      padding-top: 24px;
+      margin-top: 0px;
+      border-top: none;
+      padding-top: 0px;
       text-align: left;
     }
 
@@ -348,7 +349,6 @@
       box-shadow: 0 0 15px rgba(237, 66, 69, 0.25);
     }
 
-    /* 新增區塊專屬樣式 */
     .footer-box {
       background: var(--card-bg);
       backdrop-filter: blur(24px);
@@ -380,6 +380,7 @@
 </head>
 <body>
 
+  <!-- 1. 上方主要功能卡片 -->
   <div class="container">
     <div class="timer-box">
       <div class="timer-title">⏳ 活動剩餘時間</div>
@@ -432,53 +433,55 @@
       <div id="boundNotice" style="display: none; color: var(--success-color); font-size: 14px; margin: 16px 0; font-weight: 700;">
         ✅ 已成功受邀綁定！
       </div>
-
-      <!-- 邀請進度獨立區塊 (僅在登入後顯示於主控制台內) -->
-      <div class="tracker-container">
-        <h3 style="margin: 0 0 6px 0; font-size: 16px; font-weight: 800;">🏆 邀請進度</h3>
-        <p style="margin: 0 0 14px 0; font-size: 13px;">目前成功邀請人數：<span id="invitedCount" style="color: white; font-weight: 800; font-size: 16px;">0</span> 人 / 無上限</p>
-
-        <div class="progress-bar-background">
-          <div id="progressBarFill" class="progress-bar-fill"></div>
-        </div>
-
-        <div class="milestones-list">
-          <div class="milestone-item" id="milestone-1">
-            <div class="milestone-icon">🔒</div>
-            <div class="milestone-info">
-              <span class="goal">達成 1 人</span>
-              <span class="reward">參與 Nitro 完整版一個月抽獎</span>
-            </div>
-          </div>
-          <div class="milestone-item" id="milestone-3">
-            <div class="milestone-icon">🔒</div>
-            <div class="milestone-info">
-              <span class="goal">達成 3 人</span>
-              <span class="reward">特殊頭飾身分組：社群磁鐵</span>
-            </div>
-          </div>
-          <div class="milestone-item" id="milestone-5">
-            <div class="milestone-icon">🔒</div>
-            <div class="milestone-info">
-              <span class="goal">達成 5 人</span>
-              <span class="reward">特殊頭飾身分組：傳送門</span>
-            </div>
-          </div>
-          <div class="milestone-item" id="milestone-10">
-            <div class="milestone-icon">🔒</div>
-            <div class="milestone-info">
-              <span class="goal">達成 10 人</span>
-              <span class="reward">特殊頭飾身分組：傳奇推手</span>
-            </div>
-          </div>
-        </div>
-
-        <p class="notice-text">💡 提醒：所有獎勵將於活動結束後由管理員統一發送！</p>
-      </div>
     </div>
   </div>
 
-  <!-- 最下方獨立版權與資訊區塊 (無論是否登入皆顯示) -->
+  <!-- 2. 下方獨立的邀請進度框 (僅在登入後顯示) -->
+  <div id="trackerBoxContainer" class="container" style="display: none;">
+    <div class="tracker-container">
+      <h3 style="margin: 0 0 6px 0; font-size: 16px; font-weight: 800;">🏆 邀請進度</h3>
+      <p style="margin: 0 0 14px 0; font-size: 13px;">目前成功邀請人數：<span id="invitedCount" style="color: white; font-weight: 800; font-size: 16px;">0</span> 人 / 無上限</p>
+
+      <div class="progress-bar-background">
+        <div id="progressBarFill" class="progress-bar-fill"></div>
+      </div>
+
+      <div class="milestones-list">
+        <div class="milestone-item" id="milestone-1">
+          <div class="milestone-icon">🔒</div>
+          <div class="milestone-info">
+            <span class="goal">達成 1 人</span>
+            <span class="reward">參與 Nitro 完整版一個月抽獎</span>
+          </div>
+        </div>
+        <div class="milestone-item" id="milestone-3">
+          <div class="milestone-icon">🔒</div>
+          <div class="milestone-info">
+            <span class="goal">達成 3 人</span>
+            <span class="reward">特殊頭飾身分組：社群磁鐵</span>
+          </div>
+        </div>
+        <div class="milestone-item" id="milestone-5">
+          <div class="milestone-icon">🔒</div>
+          <div class="milestone-info">
+            <span class="goal">達成 5 人</span>
+            <span class="reward">特殊頭飾身分組：傳送門</span>
+          </div>
+        </div>
+        <div class="milestone-item" id="milestone-10">
+          <div class="milestone-icon">🔒</div>
+          <div class="milestone-info">
+            <span class="goal">達成 10 人</span>
+            <span class="reward">特殊頭飾身分組：傳奇推手</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="notice-text">💡 提醒：所有獎勵將於活動結束後由管理員統一發送！</p>
+    </div>
+  </div>
+
+  <!-- 3. 最下方獨立版權與資訊區塊 (無論是否登入皆顯示) -->
   <div class="footer-box">
     本網頁圖像素材皆屬 Devsisters 所有<br>
     本活動亦與官方無任何關聯<br>
@@ -604,6 +607,7 @@
     function showDashboard(user) {
       document.getElementById('loginGate').style.display = 'none';
       document.getElementById('dashboardSection').style.display = 'block';
+      document.getElementById('trackerBoxContainer').style.display = 'block';
 
       document.getElementById('userName').innerText = user.username;
       document.getElementById('myCode').innerText = user.myInviteCode;
