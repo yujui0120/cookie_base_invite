@@ -421,7 +421,7 @@
       <div id="newMemberSection" class="input-group" style="display: none;">
         <label for="targetCodeInput">輸入邀請人的邀請碼 (9碼)：</label>
         <input type="text" id="targetCodeInput" placeholder="例: A1B2C3D4E" maxlength="9">
-        <button id="submitCodeBtn" class="btn" style="margin-top: 12px;">確認綁定</button>
+        <button id="submitCodeBtn" class="btn" style="margin-top: 12px;">確認輸入</button>
         <div id="errorMsg"></div>
       </div>
 
@@ -691,7 +691,7 @@
 
         if (invitedCount >= target) {
           itemElement.classList.add('completed');
-          iconElement.innerText = '✅';
+          iconElement.innerText = '🔓';
         } else {
           itemElement.classList.remove('completed');
           iconElement.innerText = '🔒';
