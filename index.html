@@ -37,9 +37,8 @@
 
     body {
       background: linear-gradient(rgba(20, 22, 27, 0.5), rgba(20, 22, 27, 0.5)), 
-                  url('background.png') no-repeat center 0px;
-      background-size: 100% auto;
-      background-attachment: scroll;
+                  url('background.png') repeat center top;
+      background-size: cover;
       color: var(--text-main);
       font-family: 'NewFontBlack', 'gg sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
@@ -102,30 +101,6 @@
       color: var(--text-main);
       font-size: 14px;
       font-weight: 700;
-    }
-
-    .rules-card {
-      background: rgba(25, 28, 35, 0.85);
-      border-left: 4px solid var(--warning-color);
-      padding: 16px;
-      border-radius: 12px;
-      text-align: left;
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-muted);
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      border-right: 1px solid rgba(255, 255, 255, 0.06);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .rules-card h3 {
-      margin: 0 0 10px 0;
-      color: var(--text-main);
-      font-size: 16px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .timer-box {
@@ -498,8 +473,8 @@
   </div>
 
   <div id="rulesBoxContainer" class="container">
-    <div class="rules-card">
-      <h3>📜 活動規則與注意事項</h3>
+    <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 800; text-align: left;">📜 活動規則與注意事項</h3>
+    <div style="text-align: left; font-size: 13px; line-height: 1.6; color: var(--text-muted);">
       • 只有於 2026/10/26 後加入伺服器的新成員具備填寫邀請碼資格。<br>
       • 每位新成員僅能輸入 1 次邀請碼，成功輸入後無法修改或取消。<br>
       • 禁止創建分身帳號或以任何不正當手段刷取邀請人數，一經發現將取消獲獎資格。<br>
@@ -565,20 +540,8 @@
       }
     }
 
-    function updateParallaxBackground() {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight <= 0) return;
-      const scrollPercent = scrollTop / docHeight;
-      const bgOffset = scrollPercent * 40;
-      document.body.style.backgroundPosition = `center ${bgOffset}%`;
-    }
-
-    window.addEventListener('scroll', updateParallaxBackground);
-
     window.addEventListener('DOMContentLoaded', async () => {
       startTimer();
-      updateParallaxBackground();
 
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
