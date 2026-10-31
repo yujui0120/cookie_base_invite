@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>遊戲 10 週年邀請活動</title>
+  <style>
+    :root {
+      --bg-color: #202225;
+      --card-bg: #2f3136;
+      --text-main: #ffffff;
+      --text-muted: #b9bbbe;
+      --accent-color: #7289da;
+      --accent-hover: #5b6eae;
+      --success-color: #43b581;
+      --border-color: #4f545c;
+    }
+    body {
+      background: linear-gradient(rgba(32, 34, 37, 0.8), rgba(32, 34, 37, 0.8)), 
+              url('background.png') no-repeat center center fixed;
+      background-size: cover;
+  
+      color: var(--text-main);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: var(--card-bg);
+      width: 100%;
+      max-width: 500px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      box-sizing: border-box;
+      text-align: center;
+    }
+    h2 { margin-top: 0; color: var(--text-main); }
+    p { color: var(--text-muted); font-size: 14px; }
+    
+    /* 按鈕樣式 */
+    .btn {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+      margin-top: 15px;
+    }
+    .btn:hover { background-color: var(--accent-hover); }
+
+    /* 邀請碼顯示區 */
+    .code-box {
+      background: #202225;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border: 1px dashed var(--border-color);
+    }
+    .code-text {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--success-color);
+      letter-spacing: 2px;
+      margin-top: 5px;
+    }
+
+    /* 輸入區 */
+    .input-group {
+      margin: 20px 0;
+      text-align: left;
+    }
+    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      background: #202225;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      box-sizing: border-box;
+      text-transform: uppercase;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    input[type="text"]:focus { outline: none; border-color: var(--accent-color); }
+
+    /* 進度條樣式 */
+    .tracker-container {
+      margin-top: 30px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+      text-align: left;
+    }
+    .progress-bar-background {
+      background: #202225;
+      border-radius: 10px;
+      height: 14px;
+      width: 100%;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #7289da, #43b581);
+      height: 100%;
+      width: 0%;
+      transition: width 0.5s ease-in-out;
+    }
+    .milestones-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .milestone-item {
+      display: flex;
+      align-items: center;
+      background: #36393f;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+    .milestone-item.completed {
+      border-color: var(--success-color);
+      background: rgba(67, 181, 129, 0.1);
+    }
+    .milestone-icon { font-size: 18px; margin-right: 12px; }
+    .milestone-info { display: flex; flex-direction: column; }
+    .milestone-info .goal { font-size: 11px; color: var(--text-muted); }
+    .milestone-info .reward { font-size: 14px; font-weight: bold; color: white; }
+    .notice-text { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px; }
+    #errorMsg { color: #ed4245; font-size: 13px; margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 1. 登入防護閘道 (未登入顯示) -->
+    <div id="loginGate">
+      <h2>🎉 10 週年社群邀請活動</h2>
+      <p>請使用 Discord 帳號登入以檢視您的專屬邀請碼與進度。</p>
+      <button id="loginBtn" class="btn">使用 Discord 登入</button>
+    </div>
+
+    <!-- 2. 主控制台 (登入後顯示) -->
+    <div id="dashboardSection" style="display: none;">
+      <h2>歡迎，<span id="userName"></span>！</h2>
+      <p id="memberTag" style="font-size: 12px; color: var(--success-color);"></p>
+
+      <!-- 專屬邀請碼區 -->
+      <div class="code-box">
+        <p style="margin: 0; color: var(--text-muted);">您的永久專屬邀請碼</p>
+        <div id="myCode" class="code-text">----------</div>
+      </div>
+
+      <!-- 新成員輸入區 (僅 2026/10/26 後加入且未填過者顯示) -->
+      <div id="newMemberSection" class="input-group" style="display: none;">
+        <label for="targetCodeInput">輸入邀請人的邀請碼 (9碼)：</label>
+        <input type="text" id="targetCodeInput" placeholder="例: A1B2C3D4E" maxlength="9">
+        <button id="submitCodeBtn" class="btn" style="margin-top: 10px;">確認綁定</button>
+        <div id="errorMsg"></div>
+      </div>
+
+      <!-- 已綁定提示訊息 -->
+      <div id="boundNotice" style="display: none; color: var(--success-color); font-size: 14px; margin: 15px 0;">
+        ✅ 已成功受邀綁定！
+      </div>
+
+      <!-- 邀請進度追蹤表 -->
+      <div class="tracker-container">
+        <h3 style="margin: 0 0 5px 0; font-size: 16px;">🏆 邀請進度解鎖</h3>
+        <p style="margin: 0 0 15px 0;">目前成功邀請人數：<span id="invitedCount" style="color: white; font-weight: bold;">0</span> 人</p>
+
+        <div class="progress-bar-background">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+
+        <div class="milestones-list">
+          <div class="milestone-item" id="milestone-3">
+            <div class="milestone-icon">🔒</div>
+            <div class="milestone-info">
+              <span class="goal">達成 3 人</span>
+              <span class="reward">獲得身分組：人脈新興</span>
+            </div>
+          </div>
+          <div class="milestone-item" id="milestone-5">
+            <div class="milestone-icon">🔒</div>
+            <div class="milestone-info">
+              <span class="goal">達成 5 人</span>
+              <span class="reward">獲得身分組：群組駐守</span>
+            </div>
+          </div>
+          <div class="milestone-item" id="milestone-10">
+            <div class="milestone-icon">🔒</div>
+            <div class="milestone-info">
+              <span class="goal">達成 10 人</span>
+              <span class="reward">獲得身分組：67啦</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="notice-text">💡 提醒：身分組將於活動結束後由管理員手動統一發送！</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ================= CONFIG 參數設定 =================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/你的GAS部署ID/exec";
+    const DISCORD_CLIENT_ID = "你的Discord_App_Client_ID";
+    const REDIRECT_URI = "https://你的帳號.github.io/你的倉庫名稱/"; // 須與 GitHub Pages 網址一致
+    // ===================================================
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const savedUser = localStorage.getItem('discord_user');
+
+      // 1. 點擊登入按鈕
+      document.getElementById('loginBtn').addEventListener('click', () => {
+        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20guilds.members.read`;
+        window.location.href = authUrl;
+      });
+
+      // 2. 處理 Discord 授權回傳的 code
+      if (code) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        await authenticateWithGas(code);
+      } 
+      // 3. 讀取快取登入
+      else if (savedUser) {
+        showDashboard(JSON.parse(savedUser));
+      }
+    });
+
+    // 呼叫 GAS 後端交換 Token 並取得用戶資料
+    async function authenticateWithGas(code) {
+      try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'DISCORD_LOGIN',
+            code: code,
+            redirectUri: REDIRECT_URI
+          })
+        });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          localStorage.setItem('discord_user', JSON.stringify(result.user));
+          showDashboard(result.user);
+        } else {
+          alert('登入失敗：' + result.message);
+          window.location.href = window.location.pathname;
+        }
+      } catch (err) {
+        console.error(err);
+        alert('連線伺服器發生錯誤');
+      }
+    }
+
+    // 渲染主畫面
+    function showDashboard(user) {
+      document.getElementById('loginGate').style.display = 'none';
+      document.getElementById('dashboardSection').style.display = 'block';
+
+      document.getElementById('userName').innerText = user.username;
+      document.getElementById('myCode').innerText = user.myInviteCode;
+      document.getElementById('memberTag').innerText = user.isNewMember ? "✨ 新成員身分（可填寫邀請碼）" : "👑 老成員身分";
+
+      // 判斷是否顯示輸入邀請碼介面
+      const newMemberSection = document.getElementById('newMemberSection');
+      const boundNotice = document.getElementById('boundNotice');
+
+      if (user.isNewMember) {
+        if (user.usedInviteCode) {
+          newMemberSection.style.display = 'none';
+          boundNotice.style.display = 'block';
+        } else {
+          newMemberSection.style.display = 'block';
+          boundNotice.style.display = 'none';
+        }
+      } else {
+        newMemberSection.style.display = 'none';
+        boundNotice.style.display = 'none';
+      }
+
+      updateProgressUI(user.invitedCount);
+
+      // 綁定送出按鈕事件
+      document.getElementById('submitCodeBtn').onclick = async () => {
+        const targetCode = document.getElementById('targetCodeInput').value.trim();
+        const errorMsg = document.getElementById('errorMsg');
+        errorMsg.innerText = '';
+
+        if (!targetCode || targetCode.length !== 9) {
+          errorMsg.innerText = '請輸入正確的 9 碼邀請碼！';
+          return;
+        }
+
+        try {
+          const res = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'SUBMIT_CODE',
+              user: user,
+              targetCode: targetCode
+            })
+          });
+          const resData = await res.json();
+
+          if (resData.status === 'success') {
+            alert(`成功受 ${resData.inviterName} 邀請！`);
+            user.usedInviteCode = targetCode;
+            localStorage.setItem('discord_user', JSON.stringify(user));
+            newMemberSection.style.display = 'none';
+            boundNotice.style.display = 'block';
+          } else {
+            errorMsg.innerText = resData.message;
+          }
+        } catch (err) {
+          errorMsg.innerText = '送出發生錯誤，請稍後再試。';
+        }
+      };
+    }
+
+    // 更新進度條與圖示
+    function updateProgressUI(invitedCount) {
+      document.getElementById('invitedCount').innerText = invitedCount;
+
+      let percentage = (invitedCount / 10) * 100;
+      if (percentage > 100) percentage = 100;
+      document.getElementById('progressBarFill').style.width = percentage + '%';
+
+      const milestones = [3, 5, 10];
+      milestones.forEach(target => {
+        const itemElement = document.getElementById(`milestone-${target}`);
+        const iconElement = itemElement.querySelector('.milestone-icon');
+
+        if (invitedCount >= target) {
+          itemElement.classList.add('completed');
+          iconElement.innerText = '✅';
+        } else {
+          itemElement.classList.remove('completed');
+          iconElement.innerText = '🔒';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
