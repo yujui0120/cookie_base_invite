@@ -438,31 +438,31 @@
       </div>
 
       <div class="milestones-list">
+        <div class="milestone-item" id="milestone-0">
+          <div class="milestone-icon">🔒</div>
+          <div class="milestone-info">
+            <span class="goal">登入活動</span>
+            <span class="reward">參與 Nitro 完整版一個月抽獎</span>
+          </div>
+        </div>
         <div class="milestone-item" id="milestone-1">
           <div class="milestone-icon">🔒</div>
           <div class="milestone-info">
             <span class="goal">達成 1 人</span>
-            <span class="reward">參與 Nitro 完整版一個月抽獎</span>
+            <span class="reward">特殊頭飾身分組：社群磁鐵</span>
           </div>
         </div>
         <div class="milestone-item" id="milestone-3">
           <div class="milestone-icon">🔒</div>
           <div class="milestone-info">
             <span class="goal">達成 3 人</span>
-            <span class="reward">特殊頭飾身分組：社群磁鐵</span>
-          </div>
-        </div>
-        <div class="milestone-item" id="milestone-5">
-          <div class="milestone-icon">🔒</div>
-          <div class="milestone-info">
-            <span class="goal">達成 5 人</span>
             <span class="reward">特殊頭飾身分組：傳送門</span>
           </div>
         </div>
-        <div class="milestone-item" id="milestone-10">
+        <div class="milestone-item" id="milestone-8">
           <div class="milestone-icon">🔒</div>
           <div class="milestone-info">
-            <span class="goal">達成 10 人</span>
+            <span class="goal">達成 8 人</span>
             <span class="reward">特殊頭飾身分組：傳奇推手</span>
           </div>
         </div>
@@ -681,7 +681,7 @@
       if (percentage > 100) percentage = 100;
       document.getElementById('progressBarFill').style.width = percentage + '%';
 
-      const milestones = [1, 3, 5, 10];
+      const milestones = [0, 1, 3, 8];
       milestones.forEach(target => {
         const itemElement = document.getElementById(`milestone-${target}`);
         const iconElement = itemElement.querySelector('.milestone-icon');
