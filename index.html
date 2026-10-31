@@ -37,8 +37,9 @@
 
     body {
       background: linear-gradient(rgba(20, 22, 27, 0.5), rgba(20, 22, 27, 0.5)), 
-                  url('background.png') repeat center top;
-      background-size: cover;
+                  url('background.png') no-repeat center 0px;
+      background-size: 100% auto;
+      background-attachment: scroll;
       color: var(--text-main);
       font-family: 'NewFontBlack', 'gg sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
@@ -101,6 +102,30 @@
       color: var(--text-main);
       font-size: 14px;
       font-weight: 700;
+    }
+
+    .rules-card {
+      background: rgba(25, 28, 35, 0.85);
+      border-left: 4px solid var(--warning-color);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .rules-card h3 {
+      margin: 0 0 10px 0;
+      color: var(--text-main);
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .timer-box {
@@ -479,10 +504,21 @@
     </div>
   </div>
 
+  <div id="rulesBoxContainer" class="container">
+    <div class="rules-card">
+      <h3>📜 活動細則與注意事項</h3>
+      • 只有於 2026/10/26 後加入伺服器的新成員具備填寫邀請碼資格。<br>
+      • 每位新成員僅能綁定 1 次邀請碼，成功綁定後無法修改或取消。<br>
+      • 禁止創建分身帳號或以任何不正當手段刷取邀請人數，一經發現將取消獲獎資格。<br>
+      • 所有身分組與抽獎獎勵將於活動倒數結束後統一由管理員發送。<br>
+      • 主辦單位（餅乾基地管理團隊）保留隨時修改、變更或終止本活動之權利。
+    </div>
+  </div>
+
   <div class="footer-box">
     本網頁圖像素材皆屬 Devsisters 所有<br>
     本活動亦與官方無任何關聯<br>
-    系統維護：餅乾基地 Discord 管理團隊<br>
+    系統製作 / 維護：餅乾基地 Discord 管理員 福爾摩倉<br>
     立即加入：<a href="https://discord.gg/jUYACExvtr" target="_blank">https://discord.gg/jUYACExvtr</a>
   </div>
 
@@ -536,8 +572,20 @@
       }
     }
 
+    function updateParallaxBackground() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) return;
+      const scrollPercent = scrollTop / docHeight;
+      const bgOffset = scrollPercent * 40;
+      document.body.style.backgroundPosition = `center ${bgOffset}%`;
+    }
+
+    window.addEventListener('scroll', updateParallaxBackground);
+
     window.addEventListener('DOMContentLoaded', async () => {
       startTimer();
+      updateParallaxBackground();
 
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
