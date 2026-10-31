@@ -42,6 +42,23 @@
     h2 { margin-top: 0; color: var(--text-main); }
     p { color: var(--text-muted); font-size: 14px; }
     
+    .info-card {
+      background: #202225;
+      border-left: 4px solid var(--accent-color);
+      padding: 12px 15px;
+      border-radius: 4px;
+      text-align: left;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+    .info-card h4 {
+      margin: 0 0 5px 0;
+      color: var(--text-main);
+      font-size: 14px;
+    }
+
     .timer-box {
       background: #202225;
       border: 1px solid var(--border-color);
@@ -83,12 +100,31 @@
       margin: 20px 0;
       border: 1px dashed var(--border-color);
     }
+    .code-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
     .code-text {
       font-size: 24px;
       font-weight: bold;
       color: var(--success-color);
       letter-spacing: 2px;
-      margin-top: 5px;
+    }
+    .copy-btn {
+      background: #36393f;
+      border: 1px solid var(--border-color);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover {
+      background: var(--border-color);
     }
 
     .input-group {
@@ -170,7 +206,7 @@
 
   <div class="container">
     <div class="timer-box">
-      <div class="timer-title">⏳ 活動倒數計時</div>
+      <div class="timer-title">⏳ 活動僅剩</div>
       <div id="countdownTimer" class="timer-display">計算中...</div>
     </div>
 
@@ -178,21 +214,45 @@
       🚫 活動已結束！邀請碼檢視與綁定功能已關閉。
     </div>
 
+    <!-- 1. 登入防護閘道 (未登入顯示) -->
     <div id="loginGate">
-      <h2>🎉 餅乾基地邀請活動</h2>
+      <h2>🎉 10 週年社群邀請活動</h2>
+      
+      <!-- 登入前說明視窗 -->
+      <div class="info-card">
+        <h4>📋 登入前注意事項</h4>
+        • 請點擊下方按鈕使用 Discord 帳號完成授權登入。<br>
+        • 您必須為本 Discord 伺服器之成員方可參與。<br>
+        • 登入後系統將自動為您生成一組專屬的 9 碼邀請碼。
+      </div>
+
       <p>請使用 Discord 帳號登入以檢視您的專屬邀請碼與進度。</p>
       <button id="loginBtn" class="btn">使用 Discord 登入</button>
     </div>
 
+    <!-- 2. 主控制台 (登入後顯示) -->
     <div id="dashboardSection" style="display: none;">
       <h2>歡迎，<span id="userName"></span>！</h2>
       <p id="memberTag" style="font-size: 12px; color: var(--success-color);"></p>
 
-      <div id="codeSection" class="code-box">
-        <p style="margin: 0; color: var(--text-muted);">您的邀請碼</p>
-        <div id="myCode" class="code-text">----------</div>
+      <!-- 登入後說明視窗 -->
+      <div class="info-card">
+        <h4>💡 活動須知與說明</h4>
+        • 將您的專屬邀請碼分享給新加入的成員進行綁定。<br>
+        • 於 2026/10/26 後加入的新成員具備 1 次填寫邀請碼資格。<br>
+        • 活動解鎖身分組獎勵將於活動結束後由管理員統一發送。
       </div>
 
+      <!-- 專屬邀請碼區 -->
+      <div id="codeSection" class="code-box">
+        <p style="margin: 0; color: var(--text-muted);">您的永久專屬邀請碼</p>
+        <div class="code-wrapper">
+          <span id="myCode" class="code-text">----------</span>
+          <button id="copyBtn" class="copy-btn">複製</button>
+        </div>
+      </div>
+
+      <!-- 新成員輸入區 -->
       <div id="newMemberSection" class="input-group" style="display: none;">
         <label for="targetCodeInput">輸入邀請人的邀請碼 (9碼)：</label>
         <input type="text" id="targetCodeInput" placeholder="例: A1B2C3D4E" maxlength="9">
@@ -200,10 +260,12 @@
         <div id="errorMsg"></div>
       </div>
 
+      <!-- 已綁定提示訊息 -->
       <div id="boundNotice" style="display: none; color: var(--success-color); font-size: 14px; margin: 15px 0;">
         ✅ 已成功受邀綁定！
       </div>
 
+      <!-- 邀請進度追蹤表 -->
       <div class="tracker-container">
         <h3 style="margin: 0 0 5px 0; font-size: 16px;">🏆 邀請進度解鎖</h3>
         <p style="margin: 0 0 15px 0;">目前成功邀請人數：<span id="invitedCount" style="color: white; font-weight: bold;">0</span> 人</p>
@@ -302,6 +364,24 @@
         if (isExpired) return;
         const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20guilds.members.read`;
         window.location.href = authUrl;
+      });
+
+      // 複製按鈕點擊事件
+      document.getElementById('copyBtn').addEventListener('click', () => {
+        const codeText = document.getElementById('myCode').innerText;
+        if (!codeText || codeText === '----------') return;
+
+        navigator.clipboard.writeText(codeText).then(() => {
+          const copyBtn = document.getElementById('copyBtn');
+          copyBtn.innerText = '已複製！';
+          copyBtn.style.background = 'var(--success-color)';
+          setTimeout(() => {
+            copyBtn.innerText = '複製';
+            copyBtn.style.background = '#36393f';
+          }, 2000);
+        }).catch(err => {
+          alert('複製失敗，請手動複製！');
+        });
       });
 
       if (code && !isExpired) {
