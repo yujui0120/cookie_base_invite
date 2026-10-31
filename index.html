@@ -44,7 +44,7 @@
       margin: 0;
       padding: 20px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       min-height: 100vh;
     }
@@ -62,6 +62,7 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      margin-bottom: 20px;
     }
 
     h2 {
@@ -346,6 +347,35 @@
       font-weight: 800;
       box-shadow: 0 0 15px rgba(237, 66, 69, 0.25);
     }
+
+    /* 新增區塊專屬樣式 */
+    .footer-box {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      width: 100%;
+      max-width: 460px;
+      padding: 20px 24px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .footer-box a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 700;
+      transition: filter 0.2s;
+    }
+
+    .footer-box a:hover {
+      filter: brightness(1.2);
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -403,6 +433,7 @@
         ✅ 已成功受邀綁定！
       </div>
 
+      <!-- 邀請進度獨立區塊 (僅在登入後顯示於主控制台內) -->
       <div class="tracker-container">
         <h3 style="margin: 0 0 6px 0; font-size: 16px; font-weight: 800;">🏆 邀請進度</h3>
         <p style="margin: 0 0 14px 0; font-size: 13px;">目前成功邀請人數：<span id="invitedCount" style="color: white; font-weight: 800; font-size: 16px;">0</span> 人 / 無上限</p>
@@ -445,6 +476,14 @@
         <p class="notice-text">💡 提醒：所有獎勵將於活動結束後由管理員統一發送！</p>
       </div>
     </div>
+  </div>
+
+  <!-- 最下方獨立版權與資訊區塊 (無論是否登入皆顯示) -->
+  <div class="footer-box">
+    本網頁圖像素材皆屬 Devsisters 所有<br>
+    本活動亦與官方無任何關聯<br>
+    系統製作 / 維護：餅乾基地 Discord 管理員 福爾摩倉<br>
+    立即加入：<a href="https://discord.gg/jUYACExvtr" target="_blank">https://discord.gg/jUYACExvtr</a>
   </div>
 
   <script>
